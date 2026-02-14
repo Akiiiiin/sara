@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pour Sara | Joyeuse Saint-Valentin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- STYLE GENERAL --- */
+        :root {
+            --primary-color: #ff4d6d;
+            --glass-bg: rgba(255, 255, 255, 0.75); /* Un peu plus opaque pour la lisibilité */
+            --bg-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+        }
+
+        body {
+            margin: 0;
+            padding: 20px 0;
+            font-family: 'Poppins', sans-serif;
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
+            overflow-x: hidden;
+            color: #4a4a4a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Alignement en haut pour le scroll sur mobile */
+        }
+
+        /* Pluie de cœurs en arrière-plan */
+        .heart-bg {
+            position: fixed;
+            top: 100vh;
+            left: 0;
+            font-size: 2rem;
+            animation: floatUp linear infinite;
+            z-index: -1;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- CONTENEUR DES PAGES --- */
+        .container {
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            margin-bottom: 50px;
+        }
+
+        /* Style des cartes (Pages) */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 25px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: none; /* Caché par défaut */
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* La page active est visible */
+        .card.active {
+            display: block;
+        }
+
+        /* Typographie */
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            color: #d63384;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+        }
+        
+        h2 { margin-top: 10px; color: #c2185b; }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin: 15px 0;
+            color: #333;
+        }
+
+        .caption {
+            font-size: 0.95rem;
+            background: rgba(255,255,255,0.7);
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 15px;
+            font-style: italic;
+            text-align: left;
+        }
+
+        /* Images et Vidéos */
+        img, video {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            display: block;
+            background: #000; /* Fond noir pendant chargement vidéo */
+        }
+        
+        /* Grille pour les nombreux médias (Page Appels) */
+        .media-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .media-grid img, .media-grid video {
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 0;
+        }
+
+        /* --- BOUTONS --- */
+        .btn {
+            background: linear-gradient(45deg, #ff4d6d, #ff8fa3);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+            transition: transform 0.2s;
+            margin-top: 10px;
+            width: 80%;
+        }
+        .btn:hover { transform: scale(1.02); }
+
+        .nav-btn {
+            background: white;
+            color: #ff4d6d;
+            border: 2px solid #ff4d6d;
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin: 5px;
+            transition: 0.3s;
+            flex: 1; /* Boutons de même taille */
+        }
+        .nav-btn:hover {
+            background: #ff4d6d;
+            color: white;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        /* --- ELEMENTS SPECIFIQUES --- */
+        .hidden-message {
+            display: none;
+            margin-top: 20px;
+            font-weight: 500;
+            color: #c2185b;
+        }
+
+        .next-arrow {
+            font-size: 3.5rem;
+            color: #ff4d6d;
+            cursor: pointer;
+            animation: bounce 2s infinite;
+            display: none; /* Caché au début */
+            margin-top: 20px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="card active" id="step1">
+            <h1>Pour Sara</h1>
+            <h2>Joyeuse Saint-Valentin</h2>
+            <div style="font-size:3rem; margin:15px; animation: heartbeat 1.5s infinite;">❤️</div>
+            <p>Tu rends mon monde plus beau chaque jour. J'ai une petite question pour toi...</p>
+            
+            <button class="btn" onclick="revealLove()">Clique ici mon cœur</button>
+
+            <div class="hidden-message" id="loveMessage">
+                Je t'aime plus que tout au monde ! <br>
+                Merci d'être ma Valentine aujourd'hui et pour toujours. 🌹
+                <br>
+                <div class="next-arrow" onclick="goToStep('step2')">⬇️</div>
+            </div>
+        </div>
+
+        <div class="card" id="step2">
+            <h2>Surprise ! 🎁</h2>
+            <p style="font-size: 1.1rem; font-weight: 500;">
+                Comme je t'aime, tu auras le droit à un petit récapitulatif de tous nos bons moments passés ensemble...
+            </p>
+            <div class="navigation" style="justify-content: center;">
+                <button class="nav-btn" style="flex:none; padding: 10px 30px;" onclick="goToStep('step3')">C'est parti ➜</button>
+            </div>
+        </div>
+
+        <div class="card" id="step3">
+            <span style="color:#ff4d6d; font-weight:bold;">Souvenir #1</span>
+            
+            <img src="image1.webp" alt="Cappadoce">
+            
+            <p class="caption">
+                Image exclusive du Bourghekizstan MDRRRR miskine mocharito encore ajd il y croit smr, en sah cest limage de Cappadoce en Turquie cest grave beau j’y suis deja aller cest grave beau jte montre quelques photos que jai pris en bas (par contre les montgolfiere faut se lever a 6h du sbah pour les voir et sa dure 15min)
+            </p>
+
+            <div class="navigation">
+                <button class="nav-btn" onclick="goToStep('step2')">⬅ Retour</button>
+                <button class="nav-btn" onclick="goToStep('step4')">Suite ➡</button>
+            </div>
+        </div>
+
+        <div class="card" id="step4">
+            <span style="color:#ff4d6d; font-weight:bold;">Souvenir #2</span>
+            <p>Quelques pépites...</p>
+
+            <img src="image2.jpg" alt="Photo 2">
+            <img src="image3.jpg" alt="Photo 3">
+            <img src="image4.jpg" alt="Photo 4">
+            
+            <video controls playsinline preload="metadata">
+                <source src="video1.mov" type="video/mp4">
+                <source src="video1.mov" type="video/quicktime">
+            </video>
+
+            <div class="navigation">
+                <button class="nav-btn" onclick="goToStep('step3')">⬅ Retour</button>
+                <button class="nav-btn" onclick="goToStep('step5')">Suite ➡</button>
+            </div>
+        </div>
+
+        <div class="card" id="step5">
+            <span style="color:#ff4d6d; font-weight:bold;">Souvenir #3</span>
+
+            <video controls playsinline preload="metadata">
+                <source src="video2.mov" type="video/mp4">
+                <source src="video2.mov" type="video/quicktime">
+            </video>
+            
+            <p class="caption">
+                et regarde le chat de lhotel miskine comment il etait trop mignon smr
+            </p>
+
+            <div class="navigation">
+                <button class="nav-btn" onclick="goToStep('step4')">⬅ Retour</button>
+                <button class="nav-btn" onclick="goToStep('step6')">Suite ➡</button>
+            </div>
+        </div>
+
+        <div class="card" id="step6">
+            <span style="color:#ff4d6d; font-weight:bold;">Souvenir #4</span>
+            
+            <img src="image5.webp" alt="Japon">
+
+            <p class="caption">
+                Image de notre voyage au japon , MDRRR le gros Hagoun qui sinvente une vie et en plus il prend une fausse image MAIS TKT PLUS TARD ON FERA CE VOYAGE AU JAPON TOI ET MOI IN SHAA ALLAH ON VISITERA PLEIN DE PAYS
+            </p>
+
+            <div class="navigation">
+                <button class="nav-btn" onclick="goToStep('step5')">⬅ Retour</button>
+                <button class="nav-btn" onclick="goToStep('step7')">Suite ➡</button>
+            </div>
+        </div>
+
+        <div class="card" id="step7">
+            <span style="color:#ff4d6d; font-weight:bold;">Souvenir #5</span>
+            
+            <img src="image6.jpg" alt="Doigt">
+
+            <p class="caption">
+                ca cest quand jtai niquer ta race 🖕
+            </p>
+
+            <div class="navigation">
+                <button class="nav-btn" onclick="goToStep('step6')">⬅ Retour</button>
+                <button class="nav-btn" onclick="goToStep('step8')">Suite ➡</button>
+            </div>
+        </div>
+
+        <div class="card" id="step8">
+            <span style="color:#ff4d6d; font-weight:bold;">Souvenir #6</span>
+            
+            <p class="caption">
+                nn sah… les vrais souvenirs cest ceux la parmis les meilleur de ma vie, plus jy pense plus tu me manque cest insoutenable d’etre aussi loin de toi wAllah sara tu me manque
+            </p>
+            <video controls playsinline preload="metadata">
+                <source src="video3.mov" type="video/mp4">
+                <source src="video3.mov" type="video/quicktime">
+            </video>
+
+            <p class="caption" style="margin-top: 30px;">
+                OLALALA QUEL GESTE IL EST ENTRAIN DE SOUMETTRE QUELLE GUILOTINNE BIEN PLACER, ELLE VA TAPER JE CROIS BIEN QUELLE VA TAPER
+            </p>
+            <video controls playsinline preload="metadata">
+                <source src="video4.mov" type="video/mp4">
+                <source src="video4.mov" type="video/quicktime">
+            </video>
+
+            <p class="caption" style="margin-top: 30px;">
+                cette étoile… (je l’ai encore dailleur)
+            </p>
+            <video controls playsinline preload="metadata">
+                <source src="video5.mov" type="video/mp4">
+                <source src="video5.mov" type="video/quicktime">
+            </video>
+
+            <div class="navigation">
+                <button class="nav-btn" onclick="goToStep('step7')">⬅ Retour</button>
+                <button class="nav-btn" onclick="goToStep('step9')">Suite ➡</button>
+            </div>
+        </div>
+
+        <div class="card" id="step9">
+            <span style="color:#ff4d6d; font-weight:bold;">Souvenir #7</span>
+            <p>nous en appel…</p>
+            
+            <div class="media-grid">
+                <video controls playsinline preload="metadata"><source src="video6.mov" type="video/quicktime"></video>
+                <video controls playsinline preload="metadata"><source src="video7.mov" type="video/quicktime"></video>
+                <video controls playsinline preload="metadata"><source src="video8.mov" type="video/quicktime"></video>
+                <video controls playsinline preload="metadata"><source src="video9.mov" type="video/quicktime"></video>
+                <img src="image7.jpg">
+                <img src="image8.jpg">
+                <img src="image9.jpg">
+                <img src="image10.jpg">
+            </div>
+
+            <div class="navigation">
+                <button class="nav-btn" onclick="goToStep('step8')">⬅ Retour</button>
+                <button class="nav-btn" onclick="goToStep('step10')">Suite ➡</button>
+            </div>
+        </div>
+
+        <div class="card" id="step10">
+            <span style="color:#ff4d6d; font-weight:bold;">Souvenir #8</span>
+            
+            <img src="image11.png">
+            <img src="image12.png">
+            <img src="image13.jpg">
+
+            <p class="caption">
+                CETTE SOIREE SUR GARTIC PHONE FJNZIAFZIFGH alalala les souvenirs.. par contre jtai trop bien dessiner sur limage avec ivory sah
+            </p>
+
+            <div class="navigation">
+                <button class="nav-btn" onclick="goToStep('step9')">⬅ Retour</button>
+                <button class="nav-btn" onclick="goToStep('step11')">Suite ➡</button>
+            </div>
+        </div>
+
+        <div class="card" id="step11">
+            <span style="color:#ff4d6d; font-weight:bold;">Souvenir #9</span>
+            
+            <video controls playsinline preload="metadata"><source src="video10.mov" type="video/quicktime"></video>
+            <video controls playsinline preload="metadata"><source src="video11.mov" type="video/quicktime"></video>
+            <img src="image14.jpg">
+
+            <p class="caption">
+                notre 2eme date, cetait tellement incroyable frrr jai kiffer etre dans une chambre d'hôtel avec toi jai jamais ressenti autant damour tetais tellement mignonne et attentionnée… merci pour ce jour sara. ET SURTOUT POUR LA CELEBRATION DE AKINHO YESSSSSS JE TAIMEEEEE
+            </p>
+
+            <div class="navigation">
+                <button class="nav-btn" onclick="goToStep('step10')">⬅ Retour</button>
+                <button class="nav-btn" onclick="goToStep('final')">Fin ❤️</button>
+            </div>
+        </div>
+
+
+        <div class="card" id="final">
+            <h1>Je t'aime Sara</h1>
+            <p>Hâte de créer encore plein d'autres souvenirs avec toi.</p>
+            <div style="font-size:4rem; animation: heartbeat 1.5s infinite; margin: 20px 0;">💖</div>
+            
+            <button class="nav-btn" style="width:100%" onclick="goToStep('step1')">Revoir depuis le début</button>
+            <br><br>
+            <button class="nav-btn" style="width:100%; background:transparent; color:#ff4d6d; border:none;" onclick="goToStep('step11')">⬅ Revenir juste avant</button>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. Fonction pour gérer les cœurs (Background)
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-bg');
+            heart.innerHTML = Math.random() < 0.5 ? '❤️' : '💖';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 1.5 + 0.5) + 'rem';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 7000);
+        }
+        setInterval(createHeart, 350);
+
+        // 2. Fonction du bouton "Clique ici"
+        function revealLove() {
+            document.getElementById('loveMessage').style.display = 'block';
+            document.querySelector('.next-arrow').style.display = 'block'; // Affiche la flèche
+            document.querySelector('.btn').style.display = 'none'; // Cache le bouton
+            
+            // Explosion de cœurs
+            for(let i = 0; i < 40; i++) { setTimeout(createHeart, i * 40); }
+        }
+
+        // 3. Système de Navigation entre les pages
+        function goToStep(stepId) {
+            // Cacher toutes les cartes
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.remove('active');
+                // Pauser les vidéos quand on change de page
+                card.querySelectorAll('video').forEach(video => video.pause());
+            });
+            // Afficher la carte demandée
+            const targetCard = document.getElementById(stepId);
+            targetCard.classList.add('active');
+            
+            // Remonter en haut de page doucement
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+        
+        // Animation battement de coeur
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = `
+            @keyframes heartbeat {
+                0% { transform: scale(1); }
+                15% { transform: scale(1.3); }
+                30% { transform: scale(1); }
+                45% { transform: scale(1.15); }
+                60% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+    </script>
+</body>
+</html>
